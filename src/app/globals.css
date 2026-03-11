@@ -1,26 +1,126 @@
 @import "tailwindcss";
 
+/* --- 1. GLOBAL RESET & BEHAVIOR --- */
+html {
+  scroll-behavior: smooth !important;
+}
+
+/* Prevents section headers from being hidden under the floating Navbar */
+:target {
+  scroll-margin-top: 100px;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #0a0a0c;
+  --foreground: #ffffff;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- 2. THEME CUSTOMIZATION (Tailwind v4) --- */
+@theme {
+  --color-background: #0a0a0c;
+  --color-secondary: #16161a;
+  --color-accent: #6366f1;
+  --color-accent-hover: #818cf8;
+  --color-muted: #94a3b8;
+  
+  /* Expensive Shadow Layers */
+  --shadow-premium: 0 20px 50px rgba(0, 0, 0, 0.5), 0 10px 20px rgba(0, 0, 0, 0.3);
+  --shadow-indigo-glow: 0 0 60px rgba(99, 102, 241, 0.15);
+}
+
+/* --- 3. LUXURY UTILITIES --- */
+@layer utilities {
+  /* Creates physical volume in cards */
+  .glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    box-shadow: 
+      inset 0 1px 1px rgba(255, 255, 255, 0.05),
+      0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Makes sections emerge from the void */
+  .mask-radial {
+    mask-image: radial-gradient(ellipse at center, black 60%, transparent 100%);
+  }
+
+  /* Smooth transition for hover glows */
+  .shadow-transition {
+    transition: box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  /* Text glow for the Hero section */
+  .text-glow {
+    text-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+  }
+}
+
+/* --- 4. ANIMATIONS --- */
+
+/* Scanning line animation */
+@keyframes scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100%); }
+}
+.animate-scan { animation: scan 12s linear infinite; }
+
+/* Button Shimmer effect */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.animate-shimmer { animation: shimmer 2.1s infinite; }
+
+/* Electric Circuit Pulse - Optimized for your custom SVG */
+@keyframes circuit-pulse {
+  0% { stroke-dashoffset: 2000; opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { stroke-dashoffset: -2000; opacity: 0.2; }
+}
+
+.animate-circuit {
+  stroke-dasharray: 400 1600; /* Segment length vs Gap length */
+  animation: circuit-pulse 8s linear infinite;
+}
+
+/* Subtle flickering for nodes */
+@keyframes flicker {
+  0%, 100% { opacity: 1; filter: brightness(1); }
+  50% { opacity: 0.4; filter: brightness(1.5); }
+}
+.animate-flicker { animation: flicker 3s ease-in-out infinite; }
+
+/* --- 5. PREMIUM SCROLLBAR --- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e1e24; /* Dark slate */
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* --- 6. FORM REFINEMENTS --- */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px #0a0a0c inset;
+  transition: background-color 5000s ease-in-out 0s;
 }
