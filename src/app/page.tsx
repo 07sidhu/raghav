@@ -11,8 +11,17 @@ import React from "react";
 
 
 export default async function Home() {
-  await connectDB();
-  const projects = await Project.find({}).sort({ createdAt: -1 }) as unknown as IProject[];
+  // Inside your Home() function
+await connectDB();
+
+// We fetch the data and tell TypeScript to treat the result as an IProject array
+const rawProjects = await Project.find({}).sort({ createdAt: -1 }).lean();
+
+// Map and ensure _id is converted to a string (Next.js requirement for props)
+const projects = rawProjects.map(doc => ({
+  ...doc,
+  _id: doc._id.toString(),
+})) as IProject[];
 
   return (
     <main className="relative min-h-screen">
@@ -27,12 +36,13 @@ export default async function Home() {
       <FadeIn delay={0.1}>
         <div className="relative group">
           
-          {/* 1. AMBIENT GLOW BEHIND PHOTO */}
-          <div className="absolute inset-0 bg-accent/20 blur-[80px] rounded-full animate-pulse group-hover:bg-accent/30 transition-colors" />
-          
-          {/* 2. THE OUTER RADAR RING (Rotating) */}
-          <div className="absolute -inset-4 border border-dashed border-accent/20 rounded-full animate-[spin_20s_linear_infinite] opacity-40" />
-          
+          {/* 1. AMBIENT GLOW: Slightly visible on mobile, intense on desktop hover */}
+          <div className="absolute inset-0 bg-accent/15 md:bg-accent/5 blur-[60px] rounded-full animate-pulse md:group-hover:bg-accent/30 transition-colors" />
+
+          {/* 2. THE OUTER RADAR RING: Visible on all devices */}
+          <div className="absolute -inset-4 border border-dashed border-accent/20 rounded-full animate-[spin_20s_linear_infinite] opacity-30 md:opacity-10 md:group-hover:opacity-40 transition-opacity" />
+
+
           {/* 3. THE INNER PULSING RING */}
           <div className="absolute -inset-2 border border-accent/10 rounded-full animate-[ping_4s_linear_infinite] opacity-20" />
 
@@ -40,12 +50,30 @@ export default async function Home() {
           <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full border-2 border-white/10 p-2 bg-secondary/20 backdrop-blur-3xl overflow-hidden shadow-2xl transition-all duration-700 group-hover:border-accent/40 group-hover:scale-[1.02]">
             <div className="relative w-full h-full rounded-full overflow-hidden">
               <Image 
-                src="/profile.jpeg" // Place your photo in public/profile.jpg
-                alt="Raghav"
-                fill
-                priority
-                className="object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100"
-              />
+                  src="/profile.jpeg" 
+                  alt="Raghav"
+                  fill
+                  priority
+                  className="
+                    object-cover 
+                    [object-position:center_15%] 
+                    
+                    /* MOBILE STATE: Full Color & Standard Scale */
+                    grayscale-0 
+                    scale-105
+                    
+                    /* DESKTOP STATE (md: and up): Grayscale until Hover */
+                    md:grayscale 
+                    md:group-hover:grayscale-0 
+                    
+                    /* HOVER ANIMATIONS (Desktop only) */
+                    md:scale-110 
+                    md:group-hover:scale-100
+                    
+                    transition-all 
+                    duration-1000
+                  "
+                />
             </div>
 
             {/* Scanning Line Overlay */}
@@ -318,67 +346,101 @@ export default async function Home() {
 
 
 
-      {/* --- SELECTED WORKS --- */}
-      <section id="projects" className="relative z-10 max-w-6xl mx-auto px-6 py-40">
-        <div className="absolute -top-20 left-0 text-[18vw] font-black text-white/[0.01] select-none pointer-events-none tracking-tighter uppercase italic">
-          Selected
-        </div>
+        {/* --- SELECTED WORKS: UNIFIED MODULES --- */}
+        <section id="projects" className="relative z-10 max-w-7xl mx-auto px-6 py-40">
+          <div className="absolute -top-20 left-0 text-[18vw] font-black text-white/[0.01] select-none pointer-events-none tracking-tighter uppercase italic">
+            Selected
+          </div>
 
-        <h2 className="text-3xl font-black text-white mb-24 tracking-tighter uppercase underline decoration-accent/30 underline-offset-8">
-          02 // Featured Operations
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
-          {projects.length === 0 ? (
-             <p className="text-muted italic">Waiting for project synchronization...</p>
-          ) : (
-            projects.map((project: IProject, index: number ) => (
-              <FadeIn key={project.title} delay={index * 0.1}>
-                <div className="group relative flex flex-col gap-10">
-                  <div className="transform transition-all duration-700 ease-out group-hover:-translate-y-4 shadow-premium group-hover:shadow-indigo-glow rounded-3xl">
-                    <BrowserFrame>
-                      <Image 
-                        src={project.image || "/placeholder.jpg"} 
-                        alt={project.title}
-                        fill
-                        className="object-cover grayscale-[30%] group-hover:grayscale-0 scale-[1.01] group-hover:scale-110 transition-all duration-[1.5s]"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        priority={index === 0}
-                      />
-                      <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                    </BrowserFrame>
+          <div className="flex items-center gap-4 mb-24">
+            <div className="h-px w-12 bg-accent/40" />
+            <h2 className="text-3xl font-black text-white tracking-tighter uppercase">
+              Featured Operations
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {projects.map((project: IProject, index: number) => (
+              <FadeIn key={project._id} delay={index * 0.1}>
+                
+                {/* THE UNIFIED MODULE CARD */}
+                <div className="group relative flex flex-col bg-secondary/40 backdrop-blur-3xl border border-white/10 rounded-[48px] overflow-hidden transition-all duration-700 hover:border-accent/40 hover:bg-secondary/60 shadow-premium hover:shadow-indigo-glow">
+                  
+                  {/* 1. TOP SECTION: THE BROWSER FRAME (The "Screen") */}
+                  <div className="p-4 pb-0">
+                    <div className="relative transform transition-all duration-700 group-hover:scale-[1.01]">
+                        <BrowserFrame>
+                          <Image 
+                            src={project.image || "/placeholder.jpg"} 
+                            alt={project.title}
+                            fill
+                            className="object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-1000"
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            priority={index === 0}
+                          />
+                          {/* Digital scanline overlay */}
+                          <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                        </BrowserFrame>
+                    </div>
                   </div>
 
-                  <div className="px-2 transition-all duration-500 group-hover:translate-x-2">
-                    <div className="flex items-center gap-6 mb-6">
-                      <h3 className="text-3xl font-black text-white tracking-tighter uppercase italic group-hover:text-accent transition-colors">{project.title}</h3>
-                      <div className="h-px flex-1 bg-white/5 group-hover:bg-accent/30 transition-all" />
+                  {/* 2. MIDDLE SECTION: PROJECT METADATA (The "Interface") */}
+                  <div className="p-10 flex flex-col flex-1">
+                    
+                    <div className="flex justify-between items-start mb-6">
+                      <div>
+                          <h3 className="text-3xl font-black text-white tracking-tighter uppercase italic group-hover:text-accent transition-colors duration-500">
+                            {project.title}
+                          </h3>
+                          <p className="text-accent/60 font-mono text-[9px] mt-1 tracking-widest uppercase">
+                            Status: Deployed_v{index + 1}.0
+                          </p>
+                      </div>
+                      <div className="text-right">
+                          <p className="text-white/20 font-mono text-[10px]">ID // 00{index + 1}</p>
+                      </div>
                     </div>
-                    
-                    <p className="text-muted text-sm mb-8 leading-relaxed max-w-md italic font-medium">{project.description}</p>
-                    
-                    <div className="flex flex-wrap gap-3 mb-10">
+
+                    <p className="text-muted text-sm leading-relaxed mb-10 font-medium italic border-l-2 border-white/5 pl-6 group-hover:border-accent/30 transition-colors">
+                      {project.description}
+                    </p>
+
+                    {/* Tech Stack with individual pill frames */}
+                    <div className="flex flex-wrap gap-2 mb-12 mt-auto">
                       {project.techStack?.map((tech: string) => (
-                        <span key={tech} className="text-[10px] font-black text-accent bg-accent/5 px-4 py-1.5 border border-accent/10 rounded-full tracking-widest uppercase shadow-[0_0_15px_rgba(99,102,241,0.05)]">
+                        <span key={tech} className="text-[9px] font-black text-white/50 border border-white/5 px-3 py-1.5 rounded-xl uppercase tracking-widest bg-white/5 group-hover:text-accent group-hover:border-accent/20 transition-all">
                           {tech}
                         </span>
                       ))}
                     </div>
 
-                    <Link 
-                      href={project.link || "#"} 
-                      target="_blank"
-                      className="inline-flex items-center gap-3 text-white text-[11px] font-black tracking-[0.4em] uppercase group-hover:text-accent transition-all"
-                    >
-                      DECRYPT SYSTEM <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" />
-                    </Link>
+                    {/* 3. BOTTOM SECTION: ACTION BAR */}
+                    <div className="pt-8 border-t border-white/5 flex items-center justify-between">
+                      <Link 
+                        href={`/projects/${project._id}`} 
+                        className="group/link flex items-center gap-3 text-white text-[11px] font-black tracking-[0.4em] uppercase transition-all"
+                      >
+                        <span className="relative overflow-hidden">
+                          DECRYPT SYSTEM
+                          <span className="absolute bottom-0 left-0 w-0 h-px bg-accent group-hover/link:w-full transition-all duration-500" />
+                        </span>
+                        <ArrowRight size={14} className="group-hover/link:translate-x-2 transition-transform text-accent" />
+                      </Link>
+
+                      {/* Functional Badge */}
+                      <div className="flex items-center gap-2 opacity-20 group-hover:opacity-100 transition-opacity">
+                        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                        <span className="text-[8px] font-black text-white uppercase tracking-tighter">Verified_Build</span>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
+
               </FadeIn>
-            ))
-          )}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
     </main>
   );
 }

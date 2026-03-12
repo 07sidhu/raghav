@@ -14,9 +14,11 @@ export default function AdminPage() {
     const projectData = {
       title: formData.get("title"),
       description: formData.get("description"),
+      challenge: formData.get("challenge"), // New
+      solution: formData.get("solution"),   // New
       techStack: (formData.get("tech") as string).split(",").map(t => t.trim()),
       link: formData.get("link"),
-      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085", // Placeholder for now
+      image: formData.get("image"),
     };
 
     const res = await fetch("/api/projects", {
@@ -32,6 +34,7 @@ export default function AdminPage() {
     setLoading(false);
   };
 
+  
   return (
     <main className="min-h-screen pt-32 px-6 flex flex-col items-center">
       <div className="w-full max-w-2xl bg-secondary/50 p-10 rounded-3xl border border-white/5 backdrop-blur-xl">
@@ -45,6 +48,19 @@ export default function AdminPage() {
           <textarea 
             name="description" placeholder="Project Description" required rows={4}
             className="p-4 bg-background border border-white/10 rounded-xl focus:border-accent outline-none text-white transition-all"
+          />
+          <textarea 
+            name="challenge" 
+            placeholder="TECHNICAL CHALLENGE (What problem did this solve?)" 
+            rows={3} 
+            className="bg-black/50 border border-white/5 p-4 rounded-xl text-white text-xs outline-none focus:border-accent" 
+          />
+
+          <textarea 
+            name="solution" 
+            placeholder="ENGINEERING SOLUTION (How did you build it?)" 
+            rows={3} 
+            className="bg-black/50 border border-white/5 p-4 rounded-xl text-white text-xs outline-none focus:border-accent" 
           />
           <input 
             name="tech" placeholder="Tech Stack (comma separated: Next.js, Tailwind, Node)" required

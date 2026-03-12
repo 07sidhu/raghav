@@ -2,6 +2,7 @@ import mongoose, { Schema, model, models } from "mongoose";
 
 // This describes the data for TypeScript
 export interface IProject {
+  _id: string;
   title: string;
   description: string;
   image: string;
@@ -9,6 +10,9 @@ export interface IProject {
   link?: string;
   github?: string;
   createdAt: Date;
+  content: string;
+  challenge: string;
+  solution: string;
 }
 
 // This describes the data for MongoDB
@@ -19,6 +23,9 @@ const ProjectSchema = new Schema<IProject>({
   techStack: { type: [String], default: [] },
   link: { type: String },
   github: { type: String },
+  content: { type: String },
+  challenge: { type: String }, 
+  solution: { type: String }, 
 }, { timestamps: true });
 
 // Check if the model exists already, otherwise create it
