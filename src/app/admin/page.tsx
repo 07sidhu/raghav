@@ -84,6 +84,10 @@ export default function AdminPage() {
             name="link" placeholder="Project URL (https://...)" 
             className="p-4 bg-background border border-white/10 rounded-xl focus:border-accent outline-none text-white transition-all"
           />
+          <input 
+            name="image" placeholder="image URL (https://...)" 
+            className="p-4 bg-background border border-white/10 rounded-xl focus:border-accent outline-none text-white transition-all"
+          />
           
           <button 
             type="submit" disabled={loading}
