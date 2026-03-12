@@ -4,37 +4,39 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Terminal, Menu, X, Github } from "lucide-react";
 
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  // 1. Handle Scroll Effect (Shrinking Navbar)
+  // Handle Scroll Effect
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 2. SMART SCROLL LOGIC
-  // This ensures links work from BOTH the home page and the pricing page
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith("#")) {
-      if (pathname === "/") {
-        // We are already home, just scroll
-        e.preventDefault();
-        const element = document.querySelector(href);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
-        }
-      } else {
-        // We are on another page, navigate to home + anchor
-        // Next.js handles the scroll automatically if href is "/#id"
+  if (href.includes("#")) {
+    const id = href.split("#")[1];
+    
+    if (pathname === "/") {
+      e.preventDefault();
+      
+      // LOOK: No 'any', no casting. 
+      // TypeScript now knows EXACTLY what window.lenis is.
+      if (window.Lenis) {
+        window.Lenis.scrollTo(`#${id}`, {
+          offset: -100,
+          duration: 1.5,
+        });
       }
-      setIsOpen(false);
     }
-  };
+    setIsOpen(false);
+  }
+};
 
   const navLinks = [
     { name: "Expertise", href: "/#services" },
@@ -52,22 +54,18 @@ export default function Navbar() {
             : "bg-transparent border-transparent"}
         `}>
           
-          {/* LOGO */}
-            <Link href="/" className="flex items-center gap-3 group">
-              {/* The Icon Box */}
-              <div className="relative w-9 h-9 flex items-center justify-center bg-accent rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                <span className="text-white font-black text-sm tracking-tighter">{">_"}</span>
-                
-                {/* Subtle Inner Glow */}
-                <div className="absolute inset-0 rounded-xl border border-white/20" />
-              </div>
+          {/* LOGO - Updated to RAGHAV */}
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative w-9 h-9 flex items-center justify-center bg-accent rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+              <span className="text-white font-black text-sm tracking-tighter">{">_"}</span>
+              <div className="absolute inset-0 rounded-xl border border-white/20" />
+            </div>
 
-              {/* The Text */}
-              <div className="flex flex-col">
-                <span className="text-[11px] font-black tracking-[0.3em] uppercase text-white leading-none mb-1">DevStudio</span>
-                <span className="text-[8px] font-bold tracking-[0.1em] uppercase text-accent/60 leading-none">Architecture</span>
-              </div>
-            </Link>
+            <div className="flex flex-col">
+              <span className="text-[11px] font-black tracking-[0.3em] uppercase text-white leading-none mb-1">RAGHAV</span>
+              <span className="text-[8px] font-bold tracking-[0.1em] uppercase text-accent/60 leading-none">Architect</span>
+            </div>
+          </Link>
 
           {/* DESKTOP LINKS */}
           <div className="hidden md:flex items-center gap-8">
@@ -75,11 +73,10 @@ export default function Navbar() {
               <Link 
                 key={link.name} 
                 href={link.href}
-                onClick={(e) => handleNavClick(e, link.href.replace("/", ""))}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className="group relative text-[10px] font-black uppercase tracking-[0.2em] text-muted hover:text-white transition-colors"
               >
                 {link.name}
-                {/* Hover Underline Glow */}
                 <span className="absolute -bottom-1 left-0 w-0 h-px bg-accent group-hover:w-full transition-all duration-300 shadow-[0_0_8px_#6366f1]" />
               </Link>
             ))}
@@ -91,7 +88,7 @@ export default function Navbar() {
               <Github size={20} />
             </a>
             <Link 
-              href="/pricing" 
+              href="/contact" 
               className="px-6 py-2 bg-white text-black text-[10px] font-black tracking-[0.2em] uppercase rounded-xl hover:bg-accent hover:text-white hover:scale-105 transition-all duration-300 active:scale-95 shadow-xl"
             >
               Hire Me
@@ -111,14 +108,14 @@ export default function Navbar() {
               <Link 
                 key={link.name} 
                 href={link.href} 
-                onClick={(e) => handleNavClick(e, link.href.replace("/", ""))}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className="text-lg font-black uppercase tracking-widest text-white border-b border-white/5 pb-4"
               >
                 {link.name}
               </Link>
             ))}
             <Link 
-              href="/pricing" 
+              href="/contact" 
               onClick={() => setIsOpen(false)}
               className="w-full py-5 bg-accent text-white text-center text-sm font-black tracking-[0.3em] rounded-2xl uppercase shadow-lg shadow-accent/20"
             >

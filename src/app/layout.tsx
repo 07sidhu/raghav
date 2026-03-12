@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import SmoothScroll from "@/components/SmoothScroll"; // Import here
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DevStudio // Freelance Digital Engineer",
-  description: "High-performance fullstack development and architectural precision.",
+  title: "Raghav-- Systems Architect",
+  description: "High-performance digital engineering and machine intelligence.",
 };
 
 export default function RootLayout({
@@ -16,10 +17,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="selection:bg-accent/30" suppressHydrationWarning>
       <body className={`${inter.className} bg-background text-white antialiased`}>
-        <Navbar />
-        {children}
+        {/* Wrap everything inside SmoothScroll */}
+        <SmoothScroll>
+          <Navbar />
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );

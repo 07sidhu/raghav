@@ -1,8 +1,24 @@
 @import "tailwindcss";
 
-/* --- 1. GLOBAL RESET & BEHAVIOR --- */
-html {
-  scroll-behavior: smooth !important;
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 
 /* Prevents section headers from being hidden under the floating Navbar */
