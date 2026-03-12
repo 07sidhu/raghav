@@ -1,34 +1,28 @@
-import mongoose, { Schema, model, models } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
-// This describes the data for TypeScript
 export interface IProject {
   _id: string;
   title: string;
   description: string;
+  challenge: string;    // ADDED
+  solution: string;     // ADDED
   image: string;
   techStack: string[];
   link?: string;
   github?: string;
-  createdAt: Date;
-  content: string;
-  challenge: string;
-  solution: string;
+  createdAt?: Date;
 }
 
-// This describes the data for MongoDB
-const ProjectSchema = new Schema<IProject>({
+const ProjectSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
+  challenge: { type: String }, // NEW
+  solution: { type: String },  // NEW
   image: { type: String, required: true },
   techStack: { type: [String], default: [] },
   link: { type: String },
   github: { type: String },
-  content: { type: String },
-  challenge: { type: String }, 
-  solution: { type: String }, 
 }, { timestamps: true });
 
-// Check if the model exists already, otherwise create it
 const Project = models.Project || model("Project", ProjectSchema);
-
 export default Project;

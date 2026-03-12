@@ -2,25 +2,34 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Project from "@/models/Project";
 
-// 1. GET: Fetch all projects to show on the site
-export async function GET() {
-  try {
-    await connectDB();
-    const projects = await Project.find({}).sort({ createdAt: -1 });
-    return NextResponse.json(projects);
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
-  }
-}
-
-// 2. POST: Save a new project from the Admin form
 export async function POST(req: Request) {
   try {
     await connectDB();
     const body = await req.json();
+
+    // Validation to prevent silent failures
+    if (!body.title || !body.image || !body.description) {
+      return NextResponse.json(
+        { error: "Protocol Error: Missing Required Fields" },
+        { status: 400 }
+      );
+    }
+
     const newProject = await Project.create(body);
-    return NextResponse.json(newProject, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to create" }, { status: 500 });
+    
+    return NextResponse.json(
+      { success: true, id: newProject._id.toString() },
+      { status: 201 }
+    );
+  } catch (error: unknown) {
+    // Narrowing the type from 'unknown' to 'Error' without using 'any'
+    const errorMessage = error instanceof Error ? error.message : "Unknown System Failure";
+    
+    console.error("❌ DATABASE_SYNC_ERROR:", errorMessage);
+    
+    return NextResponse.json(
+      { error: errorMessage },
+      { status: 500 }
+    );
   }
 }

@@ -348,98 +348,87 @@ const projects = rawProjects.map(doc => ({
 
         {/* --- SELECTED WORKS: UNIFIED MODULES --- */}
         <section id="projects" className="relative z-10 max-w-7xl mx-auto px-6 py-40">
-          <div className="absolute -top-20 left-0 text-[18vw] font-black text-white/[0.01] select-none pointer-events-none tracking-tighter uppercase italic">
-            Selected
-          </div>
+           {/* --- SELECTED WORKS: DIRECT LINK MODULES --- */}
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+  {projects.map((project: IProject, index: number) => (
+    <FadeIn key={project._id} delay={index * 0.1}>
+      
+      <div className="group relative flex flex-col bg-secondary/40 backdrop-blur-3xl border border-white/10 rounded-[48px] overflow-hidden transition-all duration-700 hover:border-accent/40 hover:bg-secondary/60 shadow-premium hover:shadow-indigo-glow">
+        
+        {/* 1. TOP SECTION: THE BROWSER FRAME */}
+        <div className="p-4 pb-0">
+           <div className="relative transform transition-all duration-700 group-hover:scale-[1.01]">
+              <BrowserFrame>
+                <Image 
+                  src={project.image || "/placeholder.jpg"} 
+                  alt={project.title}
+                  fill
+                  className="object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-1000"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority={index === 0}
+                />
+                <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              </BrowserFrame>
+           </div>
+        </div>
 
-          <div className="flex items-center gap-4 mb-24">
-            <div className="h-px w-12 bg-accent/40" />
-            <h2 className="text-3xl font-black text-white tracking-tighter uppercase">
-              Featured Operations
-            </h2>
-          </div>
+        {/* 2. MIDDLE SECTION: PROJECT METADATA */}
+        <div className="p-10 flex flex-col flex-1">
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {projects.map((project: IProject, index: number) => (
-              <FadeIn key={project._id} delay={index * 0.1}>
-                
-                {/* THE UNIFIED MODULE CARD */}
-                <div className="group relative flex flex-col bg-secondary/40 backdrop-blur-3xl border border-white/10 rounded-[48px] overflow-hidden transition-all duration-700 hover:border-accent/40 hover:bg-secondary/60 shadow-premium hover:shadow-indigo-glow">
-                  
-                  {/* 1. TOP SECTION: THE BROWSER FRAME (The "Screen") */}
-                  <div className="p-4 pb-0">
-                    <div className="relative transform transition-all duration-700 group-hover:scale-[1.01]">
-                        <BrowserFrame>
-                          <Image 
-                            src={project.image || "/placeholder.jpg"} 
-                            alt={project.title}
-                            fill
-                            className="object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-1000"
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            priority={index === 0}
-                          />
-                          {/* Digital scanline overlay */}
-                          <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                        </BrowserFrame>
-                    </div>
-                  </div>
+          <div className="flex justify-between items-start mb-6">
+             <div>
+                <h3 className="text-3xl font-black text-white tracking-tighter uppercase italic group-hover:text-accent transition-colors duration-500">
+                  {project.title}
+                </h3>
+                <p className="text-accent/60 font-mono text-[9px] mt-1 tracking-widest uppercase">
+                  Build_v{index + 1}.0 // LIVE
+                </p>
+             </div>
+             <div className="text-right">
+                <p className="text-white/20 font-mono text-[10px]">SYSTEM // 00{index + 1}</p>
+             </div>
+          </div>
 
-                  {/* 2. MIDDLE SECTION: PROJECT METADATA (The "Interface") */}
-                  <div className="p-10 flex flex-col flex-1">
-                    
-                    <div className="flex justify-between items-start mb-6">
-                      <div>
-                          <h3 className="text-3xl font-black text-white tracking-tighter uppercase italic group-hover:text-accent transition-colors duration-500">
-                            {project.title}
-                          </h3>
-                          <p className="text-accent/60 font-mono text-[9px] mt-1 tracking-widest uppercase">
-                            Status: Deployed_v{index + 1}.0
-                          </p>
-                      </div>
-                      <div className="text-right">
-                          <p className="text-white/20 font-mono text-[10px]">ID // 00{index + 1}</p>
-                      </div>
-                    </div>
+          <p className="text-muted text-sm leading-relaxed mb-10 font-medium italic border-l-2 border-white/5 pl-6 group-hover:border-accent/30 transition-colors">
+            {project.description}
+          </p>
 
-                    <p className="text-muted text-sm leading-relaxed mb-10 font-medium italic border-l-2 border-white/5 pl-6 group-hover:border-accent/30 transition-colors">
-                      {project.description}
-                    </p>
-
-                    {/* Tech Stack with individual pill frames */}
-                    <div className="flex flex-wrap gap-2 mb-12 mt-auto">
-                      {project.techStack?.map((tech: string) => (
-                        <span key={tech} className="text-[9px] font-black text-white/50 border border-white/5 px-3 py-1.5 rounded-xl uppercase tracking-widest bg-white/5 group-hover:text-accent group-hover:border-accent/20 transition-all">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* 3. BOTTOM SECTION: ACTION BAR */}
-                    <div className="pt-8 border-t border-white/5 flex items-center justify-between">
-                      <Link 
-                        href={`/projects/${project._id}`} 
-                        className="group/link flex items-center gap-3 text-white text-[11px] font-black tracking-[0.4em] uppercase transition-all"
-                      >
-                        <span className="relative overflow-hidden">
-                          DECRYPT SYSTEM
-                          <span className="absolute bottom-0 left-0 w-0 h-px bg-accent group-hover/link:w-full transition-all duration-500" />
-                        </span>
-                        <ArrowRight size={14} className="group-hover/link:translate-x-2 transition-transform text-accent" />
-                      </Link>
-
-                      {/* Functional Badge */}
-                      <div className="flex items-center gap-2 opacity-20 group-hover:opacity-100 transition-opacity">
-                        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                        <span className="text-[8px] font-black text-white uppercase tracking-tighter">Verified_Build</span>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-
-              </FadeIn>
+          <div className="flex flex-wrap gap-2 mb-12 mt-auto">
+            {project.techStack?.map((tech: string) => (
+              <span key={tech} className="text-[9px] font-black text-white/50 border border-white/5 px-3 py-1.5 rounded-xl uppercase tracking-widest bg-white/5 group-hover:text-accent group-hover:border-accent/20 transition-all">
+                {tech}
+              </span>
             ))}
           </div>
+
+          {/* 3. BOTTOM SECTION: DIRECT ACTION BAR */}
+          <div className="pt-8 border-t border-white/5 flex items-center justify-between">
+            {/* THIS IS THE DIRECT LINK TO EXTERNAL DEPLOYMENT */}
+            <a 
+              href={project.link} 
+              target="_blank" 
+              rel="noreferrer"
+              className="group/link flex items-center gap-3 text-white text-[11px] font-black tracking-[0.4em] uppercase transition-all btn-active-state"
+            >
+              <span className="relative overflow-hidden">
+                INITIALIZE LIVE SYSTEM
+                <span className="absolute bottom-0 left-0 w-0 h-px bg-accent group-hover/link:w-full transition-all duration-500" />
+              </span>
+              <ArrowRight size={14} className="group-hover/link:translate-x-2 transition-transform text-accent" />
+            </a>
+
+            <div className="flex items-center gap-2 opacity-20 group-hover:opacity-100 transition-opacity">
+               <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+               <span className="text-[8px] font-black text-white uppercase tracking-tighter">Production_Ready</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </FadeIn>
+  ))}
+</div>
         </section>
     </main>
   );

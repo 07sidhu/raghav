@@ -1,38 +1,52 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
 
-    const formData = new FormData(e.currentTarget);
-    const projectData = {
-      title: formData.get("title"),
-      description: formData.get("description"),
-      challenge: formData.get("challenge"), // New
-      solution: formData.get("solution"),   // New
-      techStack: (formData.get("tech") as string).split(",").map(t => t.trim()),
-      link: formData.get("link"),
-      image: formData.get("image"),
-    };
+  const formData = new FormData(e.currentTarget);
+  
+  const projectData = {
+    title: formData.get("title"),
+    description: formData.get("description"),
+    challenge: formData.get("challenge"),
+    solution: formData.get("solution"),
+    techStack: (formData.get("tech") as string).split(",").map(t => t.trim()),
+    link: formData.get("link"),
+    image: formData.get("image"),
+  };
 
+  // DEBUG 1: See if the form is actually gathering data
+  console.log("Client: Sending Project Data ->", projectData);
+
+  try {
     const res = await fetch("/api/projects", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(projectData),
     });
 
+    const result = await res.json();
+
     if (res.ok) {
-      alert("Project Added Successfully!");
-      router.push("/"); // Go back to homepage to see it
+      alert("✅ TRANSMISSION SUCCESSFUL: Data saved to Atlas.");
+      (e.target as HTMLFormElement).reset();
+    } else {
+      // DEBUG 2: See why the server rejected it
+      console.error("Server Error:", result.error);
+      alert(`❌ SYSTEM ERROR: ${result.error}`);
     }
+  } catch (err) {
+    console.error("Fetch Error:", err);
+    alert("❌ CONNECTION FAILURE: Cannot reach API.");
+  } finally {
     setLoading(false);
-  };
+  }
+};
 
   
   return (
