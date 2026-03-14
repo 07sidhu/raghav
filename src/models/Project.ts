@@ -4,8 +4,6 @@ export interface IProject {
   _id: string;
   title: string;
   description: string;
-  challenge: string;    // ADDED
-  solution: string;     // ADDED
   image: string;
   techStack: string[];
   link?: string;
@@ -16,8 +14,6 @@ export interface IProject {
 const ProjectSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  challenge: { type: String }, // NEW
-  solution: { type: String },  // NEW
   image: { type: String, required: true },
   techStack: { type: [String], default: [] },
   link: { type: String },
