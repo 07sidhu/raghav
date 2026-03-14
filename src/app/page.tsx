@@ -1,14 +1,13 @@
 export const dynamic = "force-dynamic"; // This tells Next.js: "Fetch fresh data on every visit"
 
 import CircuitBackground from "@/components/CircuitBackground";
-import { ArrowRight, Zap, Cpu, Globe, Sparkles, Terminal, Code2, Database , Layers, Cpu as Processor, Smartphone, Binary, Braces, Search, BarChart3, Cloud } from "lucide-react";
+import { ArrowRight, Zap, Cpu, Sparkles, Terminal, Code2, Database , Layers, Smartphone, Binary } from "lucide-react";
 import { connectDB } from "@/lib/mongodb";
 import Project, { IProject } from "@/models/Project";
 import BrowserFrame from "@/components/BrowserFrame";
 import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
-import React from "react";
 import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
 
 
@@ -57,6 +56,8 @@ const projects = rawProjects.map(doc => ({
                   alt="Raghav"
                   fill
                   priority
+                  sizes="(max-width: 768px) 256px, 320px" 
+                  quality={80}
                   className="
                     object-cover 
                     [object-position:center_15%] 
@@ -107,7 +108,7 @@ const projects = rawProjects.map(doc => ({
       </FadeIn>
 
       <FadeIn delay={0.4}>
-        <h1 className="text-6xl md:text-8xl lg:text-[110px] font-black tracking-tighter leading-[0.8] mb-10 text-white italic">
+        <h1 className="text-5xl md:text-8xl lg:text-[110px] font-black tracking-tighter leading-[0.8] mb-10 text-white italic">
           RAGHAV <br />
           <span className="bg-gradient-to-b from-white via-white to-accent bg-clip-text text-transparent opacity-90 text-glow not-italic uppercase">
             Digital Architect.
@@ -293,6 +294,7 @@ const projects = rawProjects.map(doc => ({
     </div>
 
     {/* 5. BACKEND LOGIC */}
+    
     <div className="group relative p-10 rounded-[48px] border border-white/10 bg-secondary/50 backdrop-blur-3xl hover:border-accent/30 transition-all shadow-xl overflow-hidden">
        <div className="absolute -right-6 -bottom-6 opacity-[0.03] text-white group-hover:text-accent group-hover:opacity-[0.08] transition-all">
          <Database size={200} />
@@ -343,7 +345,6 @@ const projects = rawProjects.map(doc => ({
           </div>
        </div>
     </div>
-
   </div>
 </section>
 

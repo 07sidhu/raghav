@@ -2,54 +2,67 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
 
-// 1. Define the "System Protocol" for our scroll engine
-// This tells TypeScript exactly which methods the object has.
-interface ScrollEngine {
+// 1. Precise Interface Protocol
+export interface IScrollEngine {
   scrollTo: (target: string | number | HTMLElement, options?: {
     offset?: number;
-    lerp?: number;
     duration?: number;
     immediate?: boolean;
-    lock?: boolean;
-    force?: boolean;
   }) => void;
   raf: (time: number) => void;
   destroy: () => void;
 }
 
-// 2. Register it globally
+// 2. Global Declaration (Using a unique key to avoid library collision)
 declare global {
   interface Window {
-    Lenis: ScrollEngine | null;
+    scrollInstance: IScrollEngine | null;
   }
 }
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Initialize the library
-    const instance = new Lenis({
-      duration: 1.2,
-      lerp: 0.08,
-      smoothWheel: true,
-    });
+    let engine: IScrollEngine | null = null;
+    let rafId: number;
 
-    // 3. The "Bridge Cast"
-    // We cast to 'unknown' first, then to our 'ScrollEngine' 
-    // This is the standard TS way to re-type a conflicting library instance
-    const engine = (instance as unknown) as ScrollEngine;
+    const startEngine = () => {
+      // 3. Initialize the Core Engine
+      const instance = new Lenis({
+        duration: 1.2,
+        lerp: 0.08,
+        smoothWheel: true,
+        touchMultiplier: 1.5, // Optimized for mobile touch
+      });
 
-    // Assign to window
-    window.Lenis = engine;
+      // 4. Safe Bridge Cast
+      engine = (instance as unknown) as IScrollEngine;
+      window.scrollInstance = engine;
 
-    function raf(time: number) {
-      engine.raf(time);
-      requestAnimationFrame(raf);
+      // 5. High-Performance Animation Loop
+      function raf(time: number) {
+        instance.raf(time);
+        rafId = requestAnimationFrame(raf);
+      }
+      rafId = requestAnimationFrame(raf);
+      
+      console.log("🚀 SCROLL_PROTOCOL_INITIALIZED");
+    };
+
+    // 6. DEFERRED INITIALIZATION (The Mobile Speed Hack)
+    // We wait for the browser to finish painting the Hero before loading Lenis
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(() => startEngine());
+    } else {
+      setTimeout(startEngine, 200);
     }
-    requestAnimationFrame(raf);
 
+    // 7. CLEANUP PROTOCOL
     return () => {
-      engine.destroy();
-      window.Lenis = null;
+      if (engine) {
+        engine.destroy();
+        window.scrollInstance = null;
+      }
+      cancelAnimationFrame(rafId);
     };
   }, []);
 

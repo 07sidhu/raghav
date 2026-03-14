@@ -1,15 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { Terminal, Menu, X, Github, MessageSquareTextIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Menu, X, Github, } from "lucide-react";
 
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
 
   // Handle Scroll Effect
   useEffect(() => {
@@ -27,8 +26,8 @@ export default function Navbar() {
       
       // LOOK: No 'any', no casting. 
       // TypeScript now knows EXACTLY what window.lenis is.
-      if (window.Lenis) {
-        window.Lenis.scrollTo(`#${id}`, {
+      if (window.scrollInstance) {
+        window.scrollInstance.scrollTo(`#${id}`, {
           offset: -100,
           duration: 1.5,
         });
