@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"; // This tells Next.js: "Fetch fresh data on every visit"
+
 import CircuitBackground from "@/components/CircuitBackground";
 import { ArrowRight, Zap, Cpu, Globe, Sparkles, Terminal, Code2, Database , Layers, Cpu as Processor, Smartphone, Binary, Braces, Search, BarChart3, Cloud } from "lucide-react";
 import { connectDB } from "@/lib/mongodb";
