@@ -27,7 +27,6 @@ const projects = rawProjects.map(doc => ({
 
   return (
     <main className="relative min-h-screen">
-      <CircuitBackground />
 
       {/* --- HERO SECTION: CIRCULAR SPLIT LAYOUT --- */}
 <section className="relative z-10 max-w-7xl mx-auto px-6 pt-40 pb-24 md:pt-56">
