@@ -350,8 +350,31 @@ const projects = rawProjects.map(doc => ({
 
 
 
-        {/* --- SELECTED WORKS: UNIFIED MODULES --- */}
-        <section id="projects" className="relative z-10 max-w-7xl mx-auto px-6 py-40">
+{/* --- SELECTED WORKS: UNIFIED MODULES --- */}
+<section id="projects" className="relative z-10 max-w-7xl mx-auto px-6 py-40">
+  
+  {/* 1. THE GHOST BACKGROUND (Adds massive depth) */}
+  <div className="absolute -top-10 left-0 text-[18vw] font-black text-white/[0.02] select-none pointer-events-none tracking-tighter uppercase italic">
+    Featured
+  </div>
+
+  {/* 2. THE TECHNICAL HEADING */}
+  <div className="relative z-10 mb-24">
+    <FadeIn>
+      <div className="flex items-center gap-3 mb-4">
+        <div className="h-px w-12 bg-accent/60 shadow-[0_0_10px_#6366f1]" />
+        <span className="text-accent font-black text-[10px] tracking-[0.6em] uppercase italic">
+          Archive_Index // 02
+        </span>
+      </div>
+      <h2 className="text-6xl md:text-8xl font-black text-white tracking-tighter uppercase italic leading-none">
+        SELECTED <span className="text-accent/40 not-italic">WORKS.</span>
+      </h2>
+      <p className="text-muted text-lg mt-8 max-w-xl border-l border-white/10 pl-8 font-medium">
+        A collection of high-stakes digital systems, ranging from <span className="text-white">Machine Intelligence</span> research to <span className="text-white">Full-Stack</span> deployments.
+      </p>
+    </FadeIn>
+  </div>
            {/* --- SELECTED WORKS: DIRECT LINK MODULES --- */}
 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
   {projects.map((project: IProject, index: number) => (
