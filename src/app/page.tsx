@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
 import React from "react";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary";
 
 
 
@@ -362,14 +363,14 @@ const projects = rawProjects.map(doc => ({
            <div className="relative transform transition-all duration-700 group-hover:scale-[1.01]">
               <BrowserFrame>
                 <Image 
-                  src={project.image || "/placeholder.jpg"} 
+                  // Pass the DB image URL through the optimizer
+                  src={optimizeCloudinaryUrl(project.image)} 
                   alt={project.title}
                   fill
                   className="object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-1000"
                   sizes="(max-width: 768px) 100vw, 50vw"
                   priority={index === 0}
                 />
-                <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
               </BrowserFrame>
            </div>
         </div>
